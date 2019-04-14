@@ -18,7 +18,9 @@
  */
 function createCompassPoints() {
     throw new Error('Not implemented');
+   
     var sides = ['N','E','S','W'];  // use array of cardinal directions only!
+
 }
 
 
@@ -56,7 +58,24 @@ function createCompassPoints() {
  *   'nothing to do' => 'nothing to do'
  */
 function* expandBraces(str) {
-    throw new Error('Not implemented');
+  
+    let queue = [str],
+        results = [],
+        regex = /{([^\{\}]+)}/;
+
+    while (queue.length) {
+        let item = queue.shift(),
+            matches = item.match(regex);
+
+        if (matches !== null) {
+            matches[1].split(',').map(cur => {
+                queue.push(item.replace(matches[0], cur));
+            });
+        } else if (results.indexOf(item) === -1) {
+            results.push(item);
+            yield item;
+        }
+    }
 }
 
 
@@ -88,7 +107,36 @@ function* expandBraces(str) {
  *
  */
 function getZigZagMatrix(n) {
-    throw new Error('Not implemented');
+    let result = new Array(n);
+	for (let i = 0; i < n; i++) {
+		result[i] = new Array(n);
+	}
+	
+	let values = Math.pow(n, 2);
+	let i = 0, j = 0;
+	for (let value = 0; value < values; value++) {
+		result[i][j] = value;
+		if ((i + j) % 2 == 0) {
+			if (j + 1 < n) {
+				j++;
+			} else {
+				i += 2;
+			}
+			if (i > 0) {
+				i--;
+			}
+		} else {
+			if (i + 1 < n) {
+				i++;
+			} else {
+				j += 2;
+			}
+			if (j > 0) {
+				j--;
+			}
+		}
+	}
+	return result;
 }
 
 
@@ -137,7 +185,29 @@ function canDominoesMakeRow(dominoes) {
  * [ 1, 2, 4, 5]          => '1,2,4,5'
  */
 function extractRanges(nums) {
-    throw new Error('Not implemented');
+    let start = nums[0];
+    let result = [];
+    for (let i = 0; i < nums.length -1; i++){
+        if (nums[i + 1] === nums[i] + 1)
+        continue;
+        if (nums[i] - start > 1)
+        result.push([`${start}-${nums[i]}`]);
+        else if (nums[i] - start === 1){
+            result.push([nums[i-1]]);
+            result.push([nums[i]]);
+        }
+        else {
+            result.push([nums[i]]);
+        }
+        start = nums[i + 1];
+    }
+    if (nums[nums.length - 1] - start > 1)
+    result.push([`${start}-${[nums[nums.length - 1]]}`]);
+    else{
+        result.push([nums[nums.length - 2]]);
+        result.push([nums[nums.length - 1]]);
+    }
+    return result.join(',');
 }
 
 module.exports = {

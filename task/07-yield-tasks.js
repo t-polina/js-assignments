@@ -33,7 +33,20 @@
  *
  */
 function* get99BottlesOfBeer() {
-    throw new Error('Not implemented');
+    let count = 99;
+    while (count >= 0) {
+        if (count >= 2) {
+            yield(`${count} bottles of beer on the wall, ${count} bottles of beer.`);
+            yield(`Take one down and pass it around, ${count - 1} bottle${count - 1 !== 1 ? 's' : ''} of beer on the wall.`)
+        } else if (count == 1) {
+            yield(`${count} bottle of beer on the wall, ${count} bottle of beer.`);
+            yield("Take one down and pass it around, no more bottles of beer on the wall.")
+        } else {
+            yield("No more bottles of beer on the wall, no more bottles of beer.");
+            yield("Go to the store and buy some more, 99 bottles of beer on the wall.")
+        }
+        count--
+    }  
 }
 
 
@@ -47,7 +60,16 @@ function* get99BottlesOfBeer() {
  *
  */
 function* getFibonacciSequence() {
-    throw new Error('Not implemented');
+    let num1 = 0;
+    let num2 = 1;
+    let cur;
+    
+    while (true) {
+        cur = num1;
+        num1 = num2
+        num2 = cur + num2;
+        yield cur;
+    }
 }
 
 
@@ -82,7 +104,15 @@ function* getFibonacciSequence() {
  *
  */
 function* depthTraversalTree(root) {
-    throw new Error('Not implemented');
+	let arr = [root];
+	for (let i = 0; i < arr.length; i++) {
+		yield arr[i];
+		if ('children' in arr[i]) {
+			for (let j = 0; j < arr[i].children.length; j++) {
+				arr.splice(i + 1 + j, 0, arr[i].children[j]);
+			}
+		}
+	}
 }
 
 
@@ -108,7 +138,15 @@ function* depthTraversalTree(root) {
  *
  */
 function* breadthTraversalTree(root) {
-    throw new Error('Not implemented');
+    let arr = [root];
+	for (let i = 0; i < arr.length; i++) {
+		yield arr[i];
+		if ('children' in arr[i]) {
+			for (let j = 0; j < arr[i].children.length; j++) {
+				arr.push(arr[i].children[j]);
+			}
+		}
+	}
 }
 
 
@@ -126,7 +164,21 @@ function* breadthTraversalTree(root) {
  *   [ 1, 3, 5, ... ], [ -1 ] => [ -1, 1, 3, 5, ...]
  */
 function* mergeSortedSequences(source1, source2) {
-    throw new Error('Not implemented');
+    let a = source1();
+    let b = source2();
+     while (1) {
+       let v1 = a.next();
+       let v2 = b.next();
+       if (v1.done) {
+           yield v2.value;
+           yield* b
+       }
+       if (v2.done) {
+           yield v1.value;
+           yield* a
+       }
+       yield* [v1.value, v2.value].sort((a, b) => a - b)
+   }
 }
 
 
